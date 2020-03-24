@@ -1,0 +1,175 @@
+apply plugin: 'BuildPlugin'
+apply plugin: 'com.android.application'
+apply plugin: 'com.github.jk1.dependency-license-report'
+apply plugin: 'at.allaboutapps.gradle-plugin'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+//apply plugin: 'io.fabric'
+apply plugin: 'kotlin-android-extensions'
+
+
+android {
+    defaultConfig {
+        applicationId "at.allaboutapps.epoxycarouseldemo"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary false // only for < API 21
+
+        manifestPlaceholders = [apiKey: "secret"] // use with ${apiKey} in manifest
+
+        resConfigs "de" // todo specify default locale(s)
+    }
+
+    buildTypes {
+        debug {
+            aaptOptions {
+                // Speed up debug builds
+                cruncherEnabled = false
+            }
+            // prevent crashlytics from updating its id
+            ext.alwaysUpdateBuildId = false
+        }
+    }
+
+    flavorDimensions "environment"
+
+    productFlavors {
+        development {
+            dimension "environment"
+            ext.neverBuildRelease = true
+
+            buildConfigField "String", "SERVER_API_URL", "\"https://debug.example.com/\""
+        }
+        staging {
+            dimension "environment"
+            ext.neverBuildRelease = true
+
+            buildConfigField "String", "SERVER_API_URL", "\"https://staging.example.com/\""
+        }
+        live {
+            dimension "environment"
+
+            buildConfigField "String", "SERVER_API_URL", "\"https://www.example.com/\""
+        }
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+        preDexLibraries true
+    }
+
+    androidExtensions {
+        experimental = true
+    }
+
+    sourceSets {
+        // generate oss license html to build folder
+        main.assets.srcDirs += "${project.buildDir}/a3generated"
+    }
+}
+
+import com.github.jk1.license.importer.XmlReportImporter
+
+licenseReport {
+    outputDir = "${project.buildDir}/a3generated/licenses"
+    projects = [project] + project.subprojects
+    configurations = ['liveReleaseRuntimeClasspath']
+    allowedLicensesFile = new File("$projectDir/../oss_licenses/src/main/assets/allowed_licenses.json")
+    excludeGroups = ['at.allaboutapps.*']
+    excludes = [
+
+    ]
+    importers = [
+            // Add excluded licenses back
+            new XmlReportImporter("More",
+                    new File("$projectDir/../oss_licenses/src/main/assets/more_licenses.xml"))
+    ]
+}
+
+dependencies {
+    implementation project(':networking')
+    implementation project(':unwrapretrofit')
+    implementation project(':oss_licenses')
+    implementation project(':glide')
+
+    implementation Dependencies.KotlinStdLib
+    implementation Dependencies.MaterialComponents
+
+    
+
+    // aaa libs
+    implementation Dependencies.A3Utilities
+    implementation Dependencies.A3RecyclerViewDecorations
+
+    // crash reporting
+    //implementation Dependencies.Crashlytics
+
+    // Android Kotlin Extensions by Google
+    // https://developer.android.com/kotlin/ktx
+    implementation Dependencies.AndroidXCoreKtx
+    implementation Dependencies.AndroidXPreferenceManager
+    implementation Dependencies.AndroidXNavigationFragment
+    implementation Dependencies.AndroidXNavigationUI
+
+    implementation Dependencies.AndroidXConstraintLayout
+
+    // ViewModel and LiveData
+    implementation Dependencies.AndroidArchLifecycle
+
+    // Support library depends on this lightweight import
+    implementation Dependencies.AndroidArchLifecycleRuntime
+
+    implementation Dependencies.AndroidArchLifecycleExtensions
+    kapt Dependencies.AndroidArchLifecycleCompiler
+
+    // optional - ReactiveStreams support for LiveData
+    implementation Dependencies.AndroidArchLifecycleReactiveStreams
+
+
+    // logging
+    implementation Dependencies.Timber
+
+    implementation Dependencies.RxJava
+    implementation Dependencies.RxKotlin
+
+    // networking
+    implementation Dependencies.RetrofitAdapterRxJava2
+    implementation Dependencies.RetrofitConverterMoshi
+
+    implementation Dependencies.OkHttpLoggingInterceptor
+    implementation Dependencies.Moshi
+    implementation Dependencies.MoshiAdapters
+
+    // dependency injection
+    implementation Dependencies.Dagger
+    implementation Dependencies.DaggerAndroid
+    implementation Dependencies.DaggerAndroidSupport
+    kapt Dependencies.DaggerCompiler
+    kapt Dependencies.DaggerCompilerAndroid
+
+
+    // epoxy
+    implementation Dependencies.Epoxy
+    kapt Dependencies.EpoxyProcessor
+
+    // Leak Canary
+    // debugImplementation because LeakCanary should only run in debug builds.
+    debugImplementation Dependencies.LeakCanary
+}
+
+
+
+
+

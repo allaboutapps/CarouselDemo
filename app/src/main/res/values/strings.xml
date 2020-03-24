@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">carouselDemo</string>
+    <string name="selected_item_name">Selected item name: %s</string>
+</resources>

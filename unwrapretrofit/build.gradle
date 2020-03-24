@@ -1,0 +1,6 @@
+apply plugin: 'BuildPlugin'
+apply plugin: 'java-library'
+
+dependencies {
+    implementation Dependencies.Retrofit
+}

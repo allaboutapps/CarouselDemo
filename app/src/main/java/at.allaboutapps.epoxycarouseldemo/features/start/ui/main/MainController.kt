@@ -12,7 +12,7 @@ class MainController(private val onItemSnappedCallback: (Int) -> Unit) : EpoxyCo
             field = value
             requestModelBuild()
             if (value.isNotEmpty()) {
-                onViewSnapped(0)
+                onItemSnappedCallback(0)
             }
         }
 
@@ -35,14 +35,10 @@ class MainController(private val onItemSnappedCallback: (Int) -> Unit) : EpoxyCo
                 .models(dummyObjectModels)
                 .onBind { _, view, _ ->
                     view.setSnapHelperCallback {
-                        onViewSnapped(it)
+                        onItemSnappedCallback(it)
                     }
                 }
 
         carouselModel.addTo(this)
-    }
-
-    private fun onViewSnapped(position: Int) {
-        onItemSnappedCallback.invoke(position)
     }
 }

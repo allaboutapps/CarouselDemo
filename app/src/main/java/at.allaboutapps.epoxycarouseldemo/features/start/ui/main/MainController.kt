@@ -5,14 +5,14 @@ import at.allaboutapps.epoxycarouseldemo.features.start.ui.main.models.DummyObje
 import at.allaboutapps.epoxycarouseldemo.networking.model.DummyObject
 import com.airbnb.epoxy.EpoxyController
 
-class MainController(private val onItemSnappedCallback: (String) -> Unit) : EpoxyController() {
+class MainController(private val onItemSnappedCallback: (Int) -> Unit) : EpoxyController() {
 
     var items: List<DummyObject> = emptyList()
         set(value) {
             field = value
             requestModelBuild()
             if (value.isNotEmpty()) {
-                onViewSnapped(items[0].name)
+                onViewSnapped(0)
             }
         }
 
@@ -34,15 +34,15 @@ class MainController(private val onItemSnappedCallback: (String) -> Unit) : Epox
                 .numViewsToShowOnScreen(numberOfViewsOnScreen)
                 .models(dummyObjectModels)
                 .onBind { _, view, _ ->
-                    view.setSnapHelperCallback {
-                        onViewSnapped(it)
+                    view.setSnapHelperCallback { position ->
+                        onViewSnapped(position)
                     }
                 }
 
         carouselModel.addTo(this)
     }
 
-    private fun onViewSnapped(itemName: String) {
-        onItemSnappedCallback.invoke(itemName)
+    private fun onViewSnapped(position: Int) {
+        onItemSnappedCallback.invoke(position)
     }
 }

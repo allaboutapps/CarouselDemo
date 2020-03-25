@@ -30,12 +30,16 @@ class MainFragment : BaseFragment() {
         carousel.layoutManager = LinearLayoutManager(requireContext())
         carousel.setControllerAndBuildModels(controller)
 
+        viewModel.currentlyActiveItemPosition.observe { position ->
+            tvDummyObjectName.text = getString(R.string.selected_item_name, viewModel.items.value!![position].name)
+        }
+
         viewModel.items.observe { items ->
             controller.items = items
         }
     }
 
-    private fun showItemName(objectName: String) {
-        tvDummyObjectName.text = getString(R.string.selected_item_name, objectName)
+    private fun showItemName(position: Int) {
+        viewModel.currentlyActiveItemPosition.onNext(position)
     }
 }

@@ -8,6 +8,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor() : ViewModel() {
 
     val items = BehaviorSubject.createDefault(itemsDefault)
+    val currentActiveItemPosition = BehaviorSubject.createDefault(0)
 
     companion object {
         val itemsDefault: List<DummyObject> = listOf(

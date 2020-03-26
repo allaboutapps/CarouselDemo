@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.Carousel
 import com.airbnb.epoxy.ModelView
-import kotlinx.android.synthetic.main.item_dummy_object.view.*
+import kotlinx.android.synthetic.main.item.view.*
 import timber.log.Timber
 
 

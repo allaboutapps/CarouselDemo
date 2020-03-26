@@ -1,3 +1,3 @@
 package at.allaboutapps.epoxycarouseldemo.networking.model
 
-data class DummyObject(val id: Int, val name: String)
+data class Item(val id: Int, val name: String)

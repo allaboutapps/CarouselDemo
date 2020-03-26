@@ -31,7 +31,7 @@ class MainFragment : BaseFragment() {
         carousel.setControllerAndBuildModels(controller)
 
         viewModel.currentActiveItemPosition.observe { position ->
-            tvDummyObjectName.text = getString(R.string.selected_item_name, viewModel.items.value!![position].name)
+            tvItemName.text = getString(R.string.selected_item_name, viewModel.items.value!![position].name)
         }
 
         viewModel.items.observe { items ->

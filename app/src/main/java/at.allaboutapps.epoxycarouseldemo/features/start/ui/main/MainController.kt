@@ -34,8 +34,8 @@ class MainController(private val onItemSnappedCallback: (Int) -> Unit) : EpoxyCo
                 .numViewsToShowOnScreen(numberOfViewsOnScreen)
                 .models(itemModels)
                 .onBind { _, view, _ ->
-                    view.setSnapHelperCallback {
-                        onItemSnappedCallback(it)
+                    view.setSnapHelperCallback { newPosition ->
+                        onItemSnappedCallback(newPosition)
                     }
                 }
 
